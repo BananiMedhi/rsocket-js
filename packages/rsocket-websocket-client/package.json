@@ -10,8 +10,8 @@
   "main": "build/index.js",
   "dependencies": {
     "fbjs": "^1.0.0",
-    "rsocket-core": "^0.0.19",
-    "rsocket-flowable": "^0.0.14",
-    "rsocket-types": "^0.0.16"
+    "rsocket-core": "file:../rsocket-core",
+    "rsocket-flowable": "file:../rsocket-flowable",
+    "rsocket-types": "file:../rsocket-types"
   }
 }
