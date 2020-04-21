@@ -86,12 +86,12 @@ export function deserializeFrameWithLength(
     encoders,
   );
 }
-
-/**
- * Given a buffer that may contain zero or more length-prefixed frames followed
- * by zero or more bytes of a (partial) subsequent frame, returns an array of
- * the frames and a buffer of the leftover bytes.
- */
+//
+// /**
+//  * Given a buffer that may contain zero or more length-prefixed frames followed
+//  * by zero or more bytes of a (partial) subsequent frame, returns an array of
+//  * the frames and a buffer of the leftover bytes.
+//  */
 export function deserializeFrames(
   buffer: Buffer,
   encoders?: ?Encoders<*>,
@@ -222,45 +222,45 @@ export function serializeFrame(frame: Frame, encoders?: ?Encoders<*>): Buffer {
       );
   }
 }
-/**
- * Byte size of frame without size prefix
- */
-export function sizeOfFrame(frame: Frame, encoders?: ?Encoders<*>): number {
-  encoders = encoders || Utf8Encoders;
-  switch (frame.type) {
-    case FRAME_TYPES.SETUP:
-      return sizeOfSetupFrame(frame, encoders);
-    case FRAME_TYPES.PAYLOAD:
-      return sizeOfPayloadFrame(frame, encoders);
-    case FRAME_TYPES.ERROR:
-      return sizeOfErrorFrame(frame, encoders);
-    case FRAME_TYPES.KEEPALIVE:
-      return sizeOfKeepAliveFrame(frame, encoders);
-    case FRAME_TYPES.REQUEST_FNF:
-    case FRAME_TYPES.REQUEST_RESPONSE:
-      return sizeOfRequestFrame(frame, encoders);
-    case FRAME_TYPES.REQUEST_STREAM:
-    case FRAME_TYPES.REQUEST_CHANNEL:
-      return sizeOfRequestManyFrame(frame, encoders);
-    case FRAME_TYPES.REQUEST_N:
-      return sizeOfRequestNFrame(frame, encoders);
-    case FRAME_TYPES.RESUME:
-      return sizeOfResumeFrame(frame, encoders);
-    case FRAME_TYPES.RESUME_OK:
-      return sizeOfResumeOkFrame(frame, encoders);
-    case FRAME_TYPES.CANCEL:
-      return sizeOfCancelFrame(frame, encoders);
-    case FRAME_TYPES.LEASE:
-      return sizeOfLeaseFrame(frame, encoders);
-    default:
-      invariant(
-        false,
-        'RSocketBinaryFraming: Unsupported frame type `%s`.',
-        getFrameTypeName(frame.type),
-      );
-  }
-}
-
+// /**
+//  * Byte size of frame without size prefix
+//  */
+// export function sizeOfFrame(frame: Frame, encoders?: ?Encoders<*>): number {
+//   encoders = encoders || Utf8Encoders;
+//   switch (frame.type) {
+//     case FRAME_TYPES.SETUP:
+//       return sizeOfSetupFrame(frame, encoders);
+//     case FRAME_TYPES.PAYLOAD:
+//       return sizeOfPayloadFrame(frame, encoders);
+//     case FRAME_TYPES.ERROR:
+//       return sizeOfErrorFrame(frame, encoders);
+//     case FRAME_TYPES.KEEPALIVE:
+//       return sizeOfKeepAliveFrame(frame, encoders);
+//     case FRAME_TYPES.REQUEST_FNF:
+//     case FRAME_TYPES.REQUEST_RESPONSE:
+//       return sizeOfRequestFrame(frame, encoders);
+//     case FRAME_TYPES.REQUEST_STREAM:
+//     case FRAME_TYPES.REQUEST_CHANNEL:
+//       return sizeOfRequestManyFrame(frame, encoders);
+//     case FRAME_TYPES.REQUEST_N:
+//       return sizeOfRequestNFrame(frame, encoders);
+//     case FRAME_TYPES.RESUME:
+//       return sizeOfResumeFrame(frame, encoders);
+//     case FRAME_TYPES.RESUME_OK:
+//       return sizeOfResumeOkFrame(frame, encoders);
+//     case FRAME_TYPES.CANCEL:
+//       return sizeOfCancelFrame(frame, encoders);
+//     case FRAME_TYPES.LEASE:
+//       return sizeOfLeaseFrame(frame, encoders);
+//     default:
+//       invariant(
+//         false,
+//         'RSocketBinaryFraming: Unsupported frame type `%s`.',
+//         getFrameTypeName(frame.type),
+//       );
+//   }
+// }
+//
 /**
  * Writes a SETUP frame into a new buffer and returns it.
  *
@@ -332,25 +332,25 @@ function serializeSetupFrame(frame: SetupFrame, encoders: Encoders<*>): Buffer {
   writePayload(frame, buffer, encoders, offset);
   return buffer;
 }
-
-function sizeOfSetupFrame(frame: SetupFrame, encoders: Encoders<*>): number {
-  const resumeTokenLength = frame.resumeToken != null
-    ? encoders.resumeToken.byteLength(frame.resumeToken)
-    : 0;
-  const metadataMimeTypeLength = frame.metadataMimeType != null
-    ? encoders.metadataMimeType.byteLength(frame.metadataMimeType)
-    : 0;
-  const dataMimeTypeLength = frame.dataMimeType != null
-    ? encoders.dataMimeType.byteLength(frame.dataMimeType)
-    : 0;
-  const payloadLength = getPayloadLength(frame, encoders);
-  return FRAME_HEADER_SIZE +
-    SETUP_FIXED_SIZE + //
-    (resumeTokenLength ? RESUME_TOKEN_LENGTH_SIZE + resumeTokenLength : 0) +
-    metadataMimeTypeLength +
-    dataMimeTypeLength +
-    payloadLength;
-}
+//
+// function sizeOfSetupFrame(frame: SetupFrame, encoders: Encoders<*>): number {
+//   const resumeTokenLength = frame.resumeToken != null
+//     ? encoders.resumeToken.byteLength(frame.resumeToken)
+//     : 0;
+//   const metadataMimeTypeLength = frame.metadataMimeType != null
+//     ? encoders.metadataMimeType.byteLength(frame.metadataMimeType)
+//     : 0;
+//   const dataMimeTypeLength = frame.dataMimeType != null
+//     ? encoders.dataMimeType.byteLength(frame.dataMimeType)
+//     : 0;
+//   const payloadLength = getPayloadLength(frame, encoders);
+//   return FRAME_HEADER_SIZE +
+//     SETUP_FIXED_SIZE + //
+//     (resumeTokenLength ? RESUME_TOKEN_LENGTH_SIZE + resumeTokenLength : 0) +
+//     metadataMimeTypeLength +
+//     dataMimeTypeLength +
+//     payloadLength;
+// }
 
 /**
  * Reads a SETUP frame from the buffer and returns it.
@@ -474,12 +474,12 @@ function serializeErrorFrame(frame: ErrorFrame, encoders: Encoders<*>): Buffer {
   return buffer;
 }
 
-function sizeOfErrorFrame(frame: ErrorFrame, encoders: Encoders<*>): number {
-  const messageLength = frame.message != null
-    ? encoders.message.byteLength(frame.message)
-    : 0;
-  return FRAME_HEADER_SIZE + ERROR_FIXED_SIZE + messageLength;
-}
+// function sizeOfErrorFrame(frame: ErrorFrame, encoders: Encoders<*>): number {
+//   const messageLength = frame.message != null
+//     ? encoders.message.byteLength(frame.message)
+//     : 0;
+//   return FRAME_HEADER_SIZE + ERROR_FIXED_SIZE + messageLength;
+// }
 
 /**
  * Reads an ERROR frame from the buffer and returns it.
@@ -540,16 +540,16 @@ function serializeKeepAliveFrame(
   }
   return buffer;
 }
-
-function sizeOfKeepAliveFrame(
-  frame: KeepAliveFrame,
-  encoders: Encoders<*>,
-): number {
-  const dataLength = frame.data != null
-    ? encoders.data.byteLength(frame.data)
-    : 0;
-  return FRAME_HEADER_SIZE + KEEPALIVE_FIXED_SIZE + dataLength;
-}
+//
+// function sizeOfKeepAliveFrame(
+//   frame: KeepAliveFrame,
+//   encoders: Encoders<*>,
+// ): number {
+//   const dataLength = frame.data != null
+//     ? encoders.data.byteLength(frame.data)
+//     : 0;
+//   return FRAME_HEADER_SIZE + KEEPALIVE_FIXED_SIZE + dataLength;
+// }
 
 /**
  * Reads a KEEPALIVE frame from the buffer and returns it.
@@ -610,13 +610,13 @@ function serializeLeaseFrame(frame: LeaseFrame, encoders: Encoders<*>): Buffer {
   return buffer;
 }
 
-function sizeOfLeaseFrame(frame: LeaseFrame, encoders: Encoders<*>): number {
-  const metaLength = frame.metadata != null
-    ? encoders.metadata.byteLength(frame.metadata)
-    : 0;
-  return FRAME_HEADER_SIZE + LEASE_FIXED_SIZE + metaLength;
-}
-
+// function sizeOfLeaseFrame(frame: LeaseFrame, encoders: Encoders<*>): number {
+//   const metaLength = frame.metadata != null
+//     ? encoders.metadata.byteLength(frame.metadata)
+//     : 0;
+//   return FRAME_HEADER_SIZE + LEASE_FIXED_SIZE + metaLength;
+// }
+//
 /**
  * Reads a LEASE frame from the buffer and returns it.
  */
@@ -668,14 +668,14 @@ function serializeRequestFrame(
   return buffer;
 }
 
-function sizeOfRequestFrame(
-  frame: RequestFnfFrame | RequestResponseFrame,
-  encoders: Encoders<*>,
-): number {
-  const payloadLength = getPayloadLength(frame, encoders);
-  return FRAME_HEADER_SIZE + payloadLength;
-}
-
+// function sizeOfRequestFrame(
+//   frame: RequestFnfFrame | RequestResponseFrame,
+//   encoders: Encoders<*>,
+// ): number {
+//   const payloadLength = getPayloadLength(frame, encoders);
+//   return FRAME_HEADER_SIZE + payloadLength;
+// }
+//
 function deserializeRequestFnfFrame(
   buffer: Buffer,
   streamId: number,
@@ -744,15 +744,15 @@ function serializeRequestManyFrame(
   writePayload(frame, buffer, encoders, offset);
   return buffer;
 }
-
-function sizeOfRequestManyFrame(
-  frame: RequestStreamFrame | RequestChannelFrame,
-  encoders: Encoders<*>,
-): number {
-  const payloadLength = getPayloadLength(frame, encoders);
-  return FRAME_HEADER_SIZE + REQUEST_MANY_HEADER + payloadLength;
-}
-
+//
+// function sizeOfRequestManyFrame(
+//   frame: RequestStreamFrame | RequestChannelFrame,
+//   encoders: Encoders<*>,
+// ): number {
+//   const payloadLength = getPayloadLength(frame, encoders);
+//   return FRAME_HEADER_SIZE + REQUEST_MANY_HEADER + payloadLength;
+// }
+//
 function deserializeRequestStreamFrame(
   buffer: Buffer,
   streamId: number,
@@ -833,12 +833,12 @@ function serializeRequestNFrame(
   return buffer;
 }
 
-function sizeOfRequestNFrame(
-  frame: RequestNFrame,
-  encoders: Encoders<*>,
-): number {
-  return FRAME_HEADER_SIZE + REQUEST_N_HEADER;
-}
+// function sizeOfRequestNFrame(
+//   frame: RequestNFrame,
+//   encoders: Encoders<*>,
+// ): number {
+//   return FRAME_HEADER_SIZE + REQUEST_N_HEADER;
+// }
 
 function deserializeRequestNFrame(
   buffer: Buffer,
@@ -878,9 +878,9 @@ function serializeCancelFrame(
   return buffer;
 }
 
-function sizeOfCancelFrame(frame: CancelFrame, encoders: Encoders<*>): number {
-  return FRAME_HEADER_SIZE;
-}
+// function sizeOfCancelFrame(frame: CancelFrame, encoders: Encoders<*>): number {
+//   return FRAME_HEADER_SIZE;
+// }
 
 function deserializeCancelFrame(
   buffer: Buffer,
@@ -915,13 +915,13 @@ function serializePayloadFrame(
   return buffer;
 }
 
-function sizeOfPayloadFrame(
-  frame: PayloadFrame,
-  encoders: Encoders<*>,
-): number {
-  const payloadLength = getPayloadLength(frame, encoders);
-  return FRAME_HEADER_SIZE + payloadLength;
-}
+// function sizeOfPayloadFrame(
+//   frame: PayloadFrame,
+//   encoders: Encoders<*>,
+// ): number {
+//   const payloadLength = getPayloadLength(frame, encoders);
+//   return FRAME_HEADER_SIZE + payloadLength;
+// }
 
 function deserializePayloadFrame(
   buffer: Buffer,
@@ -980,10 +980,10 @@ function serializeResumeFrame(
   return buffer;
 }
 
-function sizeOfResumeFrame(frame: ResumeFrame, encoders: Encoders<*>): number {
-  const resumeTokenLength = encoders.resumeToken.byteLength(frame.resumeToken);
-  return FRAME_HEADER_SIZE + RESUME_FIXED_SIZE + resumeTokenLength;
-}
+// function sizeOfResumeFrame(frame: ResumeFrame, encoders: Encoders<*>): number {
+//   const resumeTokenLength = encoders.resumeToken.byteLength(frame.resumeToken);
+//   return FRAME_HEADER_SIZE + RESUME_FIXED_SIZE + resumeTokenLength;
+// }
 
 function deserializeResumeFrame(
   buffer: Buffer,
@@ -1050,14 +1050,14 @@ function serializeResumeOkFrame(
   writeUInt64BE(buffer, frame.clientPosition, offset);
   return buffer;
 }
-
-function sizeOfResumeOkFrame(
-  frame: ResumeOkFrame,
-  encoders: Encoders<*>,
-): number {
-  return FRAME_HEADER_SIZE + RESUME_OK_FIXED_SIZE;
-}
-
+//
+// function sizeOfResumeOkFrame(
+//   frame: ResumeOkFrame,
+//   encoders: Encoders<*>,
+// ): number {
+//   return FRAME_HEADER_SIZE + RESUME_OK_FIXED_SIZE;
+// }
+//
 function deserializeResumeOkFrame(
   buffer: Buffer,
   streamId: number,
