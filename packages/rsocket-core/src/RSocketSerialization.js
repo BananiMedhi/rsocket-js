@@ -18,8 +18,8 @@
 
 import type {Encodable} from 'rsocket-types';
 
-import {LiteBuffer as Buffer} from './LiteBuffer';
-import invariant from 'fbjs/lib/invariant';
+// import {LiteBuffer as Buffer} from './LiteBuffer';
+// import invariant from 'fbjs/lib/invariant';
 
 /**
  * A Serializer transforms data between the application encoding used in
@@ -35,49 +35,49 @@ export type PayloadSerializers<D, M> = {|
   metadata: Serializer<M>,
 |};
 
-// JSON serializer
-export const JsonSerializer: Serializer<*> = {
-  deserialize: data => {
-    let str;
-    if (data == null) {
-      return null;
-    } else if (typeof data === 'string') {
-      str = data;
-    } else if (Buffer.isBuffer(data)) {
-      const buffer: Buffer = data;
-      str = buffer.toString('utf8');
-    } else {
-      const buffer: Buffer = Buffer.from(data);
-      str = buffer.toString('utf8');
-    }
-    return JSON.parse(str);
-  },
-  serialize: JSON.stringify,
-};
-
-export const JsonSerializers = {
-  data: JsonSerializer,
-  metadata: JsonSerializer,
-};
-
-// Pass-through serializer
-export const IdentitySerializer: Serializer<Encodable> = {
-  deserialize: data => {
-    invariant(
-      data == null ||
-        typeof data === 'string' ||
-        Buffer.isBuffer(data) ||
-        data instanceof Uint8Array,
-      'RSocketSerialization: Expected data to be a string, Buffer, or ' +
-        'Uint8Array. Got `%s`.',
-      data,
-    );
-    return data;
-  },
-  serialize: data => data,
-};
-
-export const IdentitySerializers = {
-  data: IdentitySerializer,
-  metadata: IdentitySerializer,
-};
+// // JSON serializer
+// export const JsonSerializer: Serializer<*> = {
+//   deserialize: data => {
+//     let str;
+//     if (data == null) {
+//       return null;
+//     } else if (typeof data === 'string') {
+//       str = data;
+//     } else if (Buffer.isBuffer(data)) {
+//       const buffer: Buffer = data;
+//       str = buffer.toString('utf8');
+//     } else {
+//       const buffer: Buffer = Buffer.from(data);
+//       str = buffer.toString('utf8');
+//     }
+//     return JSON.parse(str);
+//   },
+//   serialize: JSON.stringify,
+// };
+//
+// export const JsonSerializers = {
+//   data: JsonSerializer,
+//   metadata: JsonSerializer,
+// };
+//
+// // Pass-through serializer
+// export const IdentitySerializer: Serializer<Encodable> = {
+//   deserialize: data => {
+//     invariant(
+//       data == null ||
+//         typeof data === 'string' ||
+//         Buffer.isBuffer(data) ||
+//         data instanceof Uint8Array,
+//       'RSocketSerialization: Expected data to be a string, Buffer, or ' +
+//         'Uint8Array. Got `%s`.',
+//       data,
+//     );
+//     return data;
+//   },
+//   serialize: data => data,
+// };
+//
+// export const IdentitySerializers = {
+//   data: IdentitySerializer,
+//   metadata: IdentitySerializer,
+// };
